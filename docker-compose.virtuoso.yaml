@@ -1,16 +1,15 @@
 #ddev-generated
-version: '3.6'
 services:
   virtuoso:
     container_name: ddev-${DDEV_SITENAME}-virtuoso
     image: tenforce/virtuoso
     environment:
-      SPARQL_UPDATE: 'true'
-      BACKUP_PREFIX: VIRTUOSO_DUMP_
-    command:
-      - '/bin/bash'
-      - '-c'
-      - '/entrypoint.sh'
+      - 'SPARQL_UPDATE=true'
+    entrypoint: 'bash -c /entrypoint.sh'
+#    command:
+#      - '/bin/bash'
+#      - '-c'
+#      - '/entrypoint.sh'
     # These labels ensure this service is discoverable by ddev.
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
@@ -18,3 +17,9 @@ services:
     volumes:
       - "./virtuoso/scripts/entrypoint.sh:/entrypoint.sh"
       - ".:/mnt/ddev_config"
+    external_links:
+      - "ddev-router:${DDEV_SITENAME}.${DDEV_TLD}"
+    expose:
+      - 8890
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail -s localhost:8890/sparql"]
