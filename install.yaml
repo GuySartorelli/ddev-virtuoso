@@ -2,4 +2,4 @@ name: virtuoso
 
 project_files:
   - docker-compose.virtuoso.yaml
-  - scripts
+  - virtuoso
